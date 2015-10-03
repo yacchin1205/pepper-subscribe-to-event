@@ -43,12 +43,17 @@
         self.memory = ALProxy("ALMemory")
 
     def onUnload(self):
+        # 修正: onUnload時にunsubscribeToEventを実行する
+        if self.memory is not None:
+            self.memory.unsubscribeToEvent(self.getParameter("key"), self.getName())
         self.memory = None
 
     def onInput_onStart(self):
         self.memory.subscribeToEvent(self.getParameter("key"), self.getName(), "onEventCallback")
 
     def onInput_onStop(self):
+        # 修正: onStop時にonUnloadを呼び出す
+        self.onUnload()
         self.onStopped()
 
     def onEventCallback(self, key, value, message):
@@ -371,13 +376,12 @@ class MyClass(GeneratedClass):
 		GeneratedClass.__init__(self)
 
 	def onInput_onStart(self):
-		self.onStopped("Choregraphe 2.3.1.25のボックスライブラリからコピー\n(動作確認のためにログ出力処理を追加・コードのコメント参照)")]]>
+		self.onStopped("修正版")]]>
 </content>
                                                 </script>
                                                 <pluginContent>
                                                     <text>
-                                                        <![CDATA[Choregraphe 2.3.1.25のボックスライブラリからコピー
-(動作確認のためにログ出力処理を追加・コードのコメント参照)]]>
+                                                        <![CDATA[修正版]]>
 </text>
                                                 </pluginContent>
                                                 <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when Diagram is loaded." id="1" />
